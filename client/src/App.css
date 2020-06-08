@@ -1,0 +1,31 @@
+* {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.app-header {
+  background-color: darkcyan;
+  color: whitesmoke;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+li {
+  color: black;
+}
+
+ul:hover a {
+  text-decoration: none;
+}
+
+a li:hover {
+  background-color: cadetblue;
+}
+
+.btn-dark {
+  margin-bottom: 30px;
+}
+
+.label-margin-top {
+  margin-top: 30px;
+}
