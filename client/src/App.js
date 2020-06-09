@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Router, Link } from "@reach/router";
+import { Router, Link, navigate } from "@reach/router";
 import './App.css';
 import Suggetions from './Suggestions';
 import Suggestion from './Suggestion';
@@ -15,6 +15,7 @@ class App extends Component {
     this.Auth = new Auth(`${this.api_url}/users/authenticate`);
     this.state = {
       suggestions: [],
+      loggedIn: this.Auth.loggedIn(),
       alert: { message: "", show: false }
     }
   }
@@ -42,10 +43,17 @@ class App extends Component {
   async login(username, password) {
     try {
       await this.Auth.login(username, password);
+      this.setState({ loggedIn: true });
       this.renderAlert("Login success", "User is logged in")
+      navigate("/")
     } catch (e) {
       this.renderAlert("Login fail", "User is not logged in")
     }
+  }
+
+  async logout() {
+    this.setState({ loggedIn: false });
+    await this.Auth.logout();
   }
 
   async getSuggestions() {
@@ -111,9 +119,10 @@ class App extends Component {
 
           {this.state.alert.show ? this.state.alert.message : <></>}
 
-          <Link to={`/login`}>
-            <button className="btn btn-dark float-right" type="button">Login</button>
-          </Link>
+          {this.state.loggedIn ?
+            <button className="btn btn-dark float-right" type="button" onClick={(_) => this.logout()}>Log out: {localStorage.username}</button>
+            : (<Link to={`/login`}><button className="btn btn-dark float-right" type="button">Login</button></Link>)
+          }
 
           <Router>
             <Suggestion path="/suggestions/:suggestionId"
@@ -126,6 +135,7 @@ class App extends Component {
               renderAlert={(title, body, show) => this.renderAlert(title, body, show)} />
             <PostSuggestion path="/create-suggestion" submitSuggestion={(suggestion) => this.onSumbitSuggestionHandler(suggestion)} />
           </Router>
+
         </div>
       </React.Fragment>
     );

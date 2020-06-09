@@ -24,6 +24,11 @@ class Auth {
     return this.getToken() !== null;
   }
 
+  logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+  }
+
   setToken(token) {
     localStorage.setItem("token", token);
   }
@@ -40,26 +45,21 @@ class Auth {
     return localStorage.getItem("token");
   }
 
-  logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("username");
-  }
-  
   fetch(url, options) {
     const headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     };
 
     if (this.loggedIn()) {
-        headers['Authorization'] = 'Bearer ' + this.getToken()
+      headers["Authorization"] = "Bearer " + this.getToken();
     }
 
     return fetch(url, {
-        headers,
-        ...options
+      headers,
+      ...options,
     });
-}
+  }
 }
 
 export default Auth;
