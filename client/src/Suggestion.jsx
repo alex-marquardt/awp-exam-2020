@@ -11,14 +11,20 @@ class Suggestion extends Component {
       content = (
         <React.Fragment>
           <h2>{suggestion.title}</h2>
+          <p>{suggestion.description}</p>
           <ul className="list-group">
             {suggestion.signatures.map((signature) => (
               <li className="list-group-item" key={signature._id}>
-                {signature.username}
-                <br />
                 <i className="text-muted blockquote-footer float-right">
                   {signature.date}
+                  <br />
+                  {localStorage.admin === "true" ? (
+                    <p className="float-right">Made by: {signature.username}</p>
+                  ) : (
+                    <></>
+                  )}
                 </i>
+                {signature.name}
               </li>
             ))}
           </ul>

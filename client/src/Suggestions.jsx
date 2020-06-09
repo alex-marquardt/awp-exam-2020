@@ -16,12 +16,13 @@ class Suggetions extends Component {
           {this.props.suggestions.map((suggestion) => (
             <Link to={`/suggestions/${suggestion._id}`} key={suggestion._id}>
               <li className="list-group-item">
-                {suggestion.title}
+                <i className="text-muted blockquote-footer float-right">
+                  {suggestion.date}
+                </i>
+                <b>{suggestion.title}</b>
                 <p>
-                  <b>
-                    Signatures:
-                    {suggestion.signatures ? suggestion.signatures.length : 0}
-                  </b>
+                  Signatures:{" "}
+                  {suggestion.signatures ? suggestion.signatures.length : 0}
                 </p>
               </li>
             </Link>

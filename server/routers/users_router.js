@@ -7,8 +7,8 @@ const bcrypt = require('bcryptjs');  // Used for hashing passwords!
 const users = [
     // These are just some test users with passwords.
     // The passwords are in clear text for testing purposes (don't do this in production).
-    { id: 0, username: "alem", password: '123' },
-    { id: 1, username: "teacher", password: '0000' }
+    { id: 0, username: "alem", password: '123', name: "Alex Marquardt", admin: true },
+    { id: 1, username: "teacher", password: '0000', name: "Kristian Teacher", admin: false }
 ];
 
 // Creating more test data: We run through all users and add a hash of their password to each.
@@ -58,8 +58,11 @@ module.exports = secret => {
                     const token = jwt.sign(payload, secret, { expiresIn: '1h' });
 
                     res.json({
-                        msg: `User '${username}' authenticated successfully`,
-                        token: token
+                        // msg: `User '${username}' authenticated successfully`,
+                        token: token,
+                        username: user.username,
+                        name: user.name,
+                        admin: user.admin
                     });
                 }
                 else res.status(401).json({ msg: "Password mismatch!" })

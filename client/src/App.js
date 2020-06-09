@@ -66,7 +66,8 @@ class App extends Component {
     await this.Auth.fetch(`${this.api_url}/suggestions`, {
       method: 'POST',
       body: JSON.stringify({
-        title: newSuggestion.title
+        title: newSuggestion.title,
+        description: newSuggestion.description,
       })
     });
   }
@@ -76,13 +77,14 @@ class App extends Component {
       method: 'POST',
       body: JSON.stringify({
         suggestionId: suggestionId,
+        name: newSignature.name,
         username: newSignature.username,
       })
     });
   }
 
   async onSubmitSignatureHandler(suggestionId, signature) {
-    if (localStorage.username !== signature) { // check if username and logged in username match
+    if (localStorage.name !== signature) { // check if username and logged in username match
       this.renderAlert("Signature failed", "Your username and signature doesn't match")
     }
     else if (this.state.suggestions.find((suggestion) => suggestion._id === suggestionId).signatures.find((sig) => sig.username === signature)) { // check if username is already added to suggestion
@@ -90,17 +92,22 @@ class App extends Component {
     }
     else {
       const newSignature = {
-        username: signature,
+        name: signature,
+        username: localStorage.username
       }
 
       await this.postSignatures(suggestionId, newSignature);
       this.getSuggestions();
+      this.resetAlert();
     }
   }
 
-  async onSumbitSuggestionHandler(suggestionTitle) {
+  async onSumbitSuggestionHandler(title, description) {
+    console.log(title, description);
+
     const newSuggestion = {
-      title: suggestionTitle
+      title: title,
+      description: description
     }
 
     await this.postSuggestion(newSuggestion);
@@ -129,11 +136,8 @@ class App extends Component {
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
               submitSignature={(suggestionId, signature) => this.onSubmitSignatureHandler(suggestionId, signature)} />
             <Suggetions path="/" suggestions={this.state.suggestions} />
-            <Login path="/login"
-              login={(username, password) => this.login(username, password)}
-              alert={this.state.alert}
-              renderAlert={(title, body, show) => this.renderAlert(title, body, show)} />
-            <PostSuggestion path="/create-suggestion" submitSuggestion={(suggestion) => this.onSumbitSuggestionHandler(suggestion)} />
+            <Login path="/login" login={(username, password) => this.login(username, password)} />
+            <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
           </Router>
 
         </div>

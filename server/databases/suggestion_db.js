@@ -2,7 +2,9 @@ class SuggestionDb {
     constructor(mongoose) {
         const suggestionSchema = new mongoose.Schema({
             title: String,
-            signatures: [{ username: String, date: String }]
+            description: String,
+            date: String,
+            signatures: [{ name: String, username: String, date: String }]
         });
 
         this.suggestionModel = mongoose.model('suggestion', suggestionSchema);

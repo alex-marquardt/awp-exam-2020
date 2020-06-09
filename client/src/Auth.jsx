@@ -16,7 +16,9 @@ class Auth {
       throw Error(json.msg);
     }
     this.setToken(json.token);
-    this.setUsername(username);
+    this.setUsername(json.username);
+    this.setName(json.name);
+    this.setAdmin(json.admin);
     return json;
   }
 
@@ -27,6 +29,8 @@ class Auth {
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("name");
+    localStorage.removeItem("admin");
   }
 
   setToken(token) {
@@ -35,6 +39,14 @@ class Auth {
 
   setUsername(username) {
     localStorage.setItem("username", username);
+  }
+
+  setName(name) {
+    localStorage.setItem("name", name);
+  }
+
+  setAdmin(admin) {
+    localStorage.setItem("admin", admin);
   }
 
   getUsername() {
@@ -47,18 +59,15 @@ class Auth {
 
   fetch(url, options) {
     const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
     };
 
     if (this.loggedIn()) {
       headers["Authorization"] = "Bearer " + this.getToken();
     }
 
-    return fetch(url, {
-      headers,
-      ...options,
-    });
+    return fetch(url, { headers, ...options });
   }
 }
 

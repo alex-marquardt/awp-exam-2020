@@ -5,12 +5,13 @@ class PostSuggestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      suggestion: "",
+      title: "",
+      description: "",
     };
   }
 
   onSubmitSuggestionHandler = () => {
-    this.props.submitSuggestion(this.state.suggestion);
+    this.props.submitSuggestion(this.state.title, this.state.description);
     navigate("/");
   };
 
@@ -25,16 +26,26 @@ class PostSuggestion extends Component {
           <button className="btn btn-dark">Back</button>
         </Link>
 
-        <h2>Create new suggestion</h2>
+        <h2>New suggestion</h2>
 
         <form>
           <div className="form-group">
-            <label>New suggestion:</label>
+            <label>Title:</label>
             <input
               type="text"
               className="form-control"
-              placeholder="Enter suggestion..."
-              name="suggestion"
+              placeholder="New suggestion title..."
+              name="title"
+              onChange={(event) => this.onInputSuggestionHandler(event)}
+            />
+          </div>
+          <div className="form-group">
+            <label>Description:</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="New suggestion description..."
+              name="description"
               onChange={(event) => this.onInputSuggestionHandler(event)}
             />
           </div>
