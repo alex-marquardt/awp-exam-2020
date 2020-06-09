@@ -14,7 +14,8 @@ class App extends Component {
     super(props);
     this.Auth = new Auth(`${this.api_url}/users/authenticate`);
     this.state = {
-      suggestions: []
+      suggestions: [],
+      alert: { message: "", show: false }
     }
   }
 
@@ -24,12 +25,26 @@ class App extends Component {
 
   getSuggestion = (suggestionId) => this.state.suggestions.find(s => s._id === suggestionId);
 
+  renderAlert(title, body) {
+    const newAlert = {
+      message:
+        <div className="alert alert-secondary"><strong>{title}: </strong>{body}<p className="float-right" style={{ cursor: "pointer" }} onClick={() => this.resetAlert()}>&times;</p></div>,
+      show: true
+    }
+    this.setState({ alert: newAlert });
+  }
+
+  resetAlert() {
+    const newAlert = { message: "", show: false }
+    this.setState({ alert: newAlert });
+  }
+
   async login(username, password) {
     try {
-      const resp = await this.Auth.login(username, password);
-      console.log("Authentication:", resp.msg);
+      await this.Auth.login(username, password);
+      this.renderAlert("Login success", "User is logged in")
     } catch (e) {
-      console.log("Login", e);
+      this.renderAlert("Login fail", "User is not logged in")
     }
   }
 
@@ -59,12 +74,20 @@ class App extends Component {
   }
 
   async onSubmitSignatureHandler(suggestionId, signature) {
-    const newSignature = {
-      username: signature,
+    if (localStorage.username !== signature) { // check if username and logged in username match
+      this.renderAlert("Signature failed", "Your username and signature doesn't match")
     }
+    else if (this.state.suggestions.find((suggestion) => suggestion._id === suggestionId).signatures.find((sig) => sig.username === signature)) { // check if username is already added to suggestion
+      this.renderAlert("Signature failed", "Your username is already added")
+    }
+    else {
+      const newSignature = {
+        username: signature,
+      }
 
-    await this.postSignatures(suggestionId, newSignature);
-    this.getSuggestions();
+      await this.postSignatures(suggestionId, newSignature);
+      this.getSuggestions();
+    }
   }
 
   async onSumbitSuggestionHandler(suggestionTitle) {
@@ -81,11 +104,12 @@ class App extends Component {
       <React.Fragment>
         <div className="app-header">
           <div className="container-fluid">
-
             <h1>Suggetions Exam App</h1>
           </div>
         </div>
         <div className="container">
+
+          {this.state.alert.show ? this.state.alert.message : <></>}
 
           <Link to={`/login`}>
             <button className="btn btn-dark float-right" type="button">Login</button>
@@ -96,7 +120,10 @@ class App extends Component {
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
               submitSignature={(suggestionId, signature) => this.onSubmitSignatureHandler(suggestionId, signature)} />
             <Suggetions path="/" suggestions={this.state.suggestions} />
-            <Login path="/login" login={(username, password) => this.login(username, password)} />
+            <Login path="/login"
+              login={(username, password) => this.login(username, password)}
+              alert={this.state.alert}
+              renderAlert={(title, body, show) => this.renderAlert(title, body, show)} />
             <PostSuggestion path="/create-suggestion" submitSuggestion={(suggestion) => this.onSumbitSuggestionHandler(suggestion)} />
           </Router>
         </div>

@@ -30,6 +30,7 @@ class PostSignature extends Component {
               onChange={(event) => this.onInputSignatureHandler(event)}
             />
           </div>
+
           <button
             className="btn btn-dark"
             type="button"
