@@ -18,6 +18,8 @@ app.use(express.static('../client/build'));
 /**** Open paths ****/
 let openPaths = [
     { url: '/api/users/authenticate', methods: ['POST'] },
+    { url: '/api/users', methods: ['POST'] },
+    { url: '/api/users', methods: ['GET'] },
     { url: '/api/suggestions', methods: ['GET'] },
     { url: '/api/suggestions/:id', methods: ['GET'] }
 ];
@@ -26,15 +28,15 @@ const secret = process.env.SECRET || "awp exam 2020";
 app.use(checkJwt({ secret: secret }).unless({ path: openPaths }));
 
 app.use((err, req, res, next) => {
-    if (err.name === 'UnauthorizedError') { // If the user didn't authorize correctly
-        res.status(401).json({ error: err.message }); // Return 401 with error message.
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).json({ error: err.message });
     } else {
-        next(); // If no errors, forward request to next middleware or route
+        next();
     }
 });
 
 /**** Routes ****/
-const usersRouter = require('./routers/users_router')(secret);
+const usersRouter = require('./routers/users_router')(secret, mongoose);
 app.use('/api/users', usersRouter);
 
 const suggestionRouter = require('./routers/suggestions_router')(mongoose);

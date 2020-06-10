@@ -4,21 +4,35 @@ class Auth {
   }
 
   async login(username, password) {
-    const res = await this.fetch(this.auth_api_url, {
+    const response = await this.fetch(`${this.auth_api_url}/authenticate`, {
       method: "POST",
       body: JSON.stringify({
         username,
         password,
       }),
     });
-    let json = await res.json();
-    if ([401, 404].includes(parseInt(res.status))) {
+    let json = await response.json();
+    if ([401, 404].includes(parseInt(response.status))) {
       throw Error(json.msg);
     }
     this.setToken(json.token);
     this.setUsername(json.username);
     this.setName(json.name);
     this.setAdmin(json.admin);
+    return json;
+  }
+
+  async createUser(username, password, name, admin) {
+    const response = await this.fetch(this.auth_api_url, {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        password,
+        name,
+        admin,
+      }),
+    });
+    let json = await response.json();
     return json;
   }
 
@@ -59,8 +73,8 @@ class Auth {
 
   fetch(url, options) {
     const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     };
 
     if (this.loggedIn()) {

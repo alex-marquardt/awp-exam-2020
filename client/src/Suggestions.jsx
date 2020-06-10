@@ -5,10 +5,8 @@ class Suggetions extends Component {
   render() {
     return (
       <React.Fragment>
-        <Link to={`/create-suggestion`}>
-          <button className="btn btn-dark" type="button">
-            Create new suggestion
-          </button>
+        <Link to={`/create-suggestion`} className="btn btn-dark" type="button">
+          Create new suggestion
         </Link>
 
         <h2>Suggetions</h2>

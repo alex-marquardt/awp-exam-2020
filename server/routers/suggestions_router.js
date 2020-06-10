@@ -6,7 +6,6 @@ module.exports = (mongoose) => {
     const db = require('../databases/suggestion_db')(mongoose);
 
     /**** Routes ****/
-
     // Get all suggestions
     router.get('/', async (req, res) => {
         const suggestions = await db.getSuggestions();

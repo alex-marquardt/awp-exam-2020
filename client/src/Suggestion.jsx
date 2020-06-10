@@ -33,8 +33,8 @@ class Suggestion extends Component {
     }
     return (
       <React.Fragment>
-        <Link to="/">
-          <button className="btn btn-dark">Back</button>
+        <Link to="/" className="btn btn-dark" type="button">
+          Back
         </Link>
         {content}
 

@@ -6,13 +6,14 @@ import Suggestion from './Suggestion';
 import Login from './Login';
 import PostSuggestion from './PostSuggestion';
 import Auth from './Auth';
+import CreateUser from './CreateUser';
 
 class App extends Component {
   api_url = process.env.REACT_APP_API_URL;
 
   constructor(props) {
     super(props);
-    this.Auth = new Auth(`${this.api_url}/users/authenticate`);
+    this.Auth = new Auth(`${this.api_url}/users`);
     this.state = {
       suggestions: [],
       loggedIn: this.Auth.loggedIn(),
@@ -44,10 +45,10 @@ class App extends Component {
     try {
       await this.Auth.login(username, password);
       this.setState({ loggedIn: true });
-      this.renderAlert("Login success", "User is logged in")
+      this.renderAlert("Login success", `${username} is logged in`)
       navigate("/")
-    } catch (e) {
-      this.renderAlert("Login fail", "User is not logged in")
+    } catch (error) {
+      this.renderAlert("Login fail", error.message)
     }
   }
 
@@ -88,7 +89,7 @@ class App extends Component {
       this.renderAlert("Signature failed", "Your username and signature doesn't match")
     }
     else if (this.state.suggestions.find((suggestion) => suggestion._id === suggestionId).signatures.find((sig) => sig.username === signature)) { // check if username is already added to suggestion
-      this.renderAlert("Signature failed", "Your username is already added")
+      this.renderAlert("Signature failed", "Your signature is already added")
     }
     else {
       const newSignature = {
@@ -114,6 +115,18 @@ class App extends Component {
     this.getSuggestions();
   }
 
+  // create user
+  async createUserHandler(username, password, name, admin) {
+    try {
+      await this.Auth.createUser(username, password, name, admin);
+      console.log(username, password, name, admin);
+
+      this.renderAlert("Sign up success", `${username} is now created`)
+    } catch (error) {
+      this.renderAlert("Sign up failed", error.message)
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -128,7 +141,10 @@ class App extends Component {
 
           {this.state.loggedIn ?
             <button className="btn btn-dark float-right" type="button" onClick={(_) => this.logout()}>Log out: {localStorage.username}</button>
-            : (<Link to={`/login`}><button className="btn btn-dark float-right" type="button">Login</button></Link>)
+            : (<div className="btn-group float-right" role="group">
+              <Link to={`/sign-up`} type="button" className="btn btn-dark">Sign up</Link>
+              <Link to={`/login`} type="button" className="btn btn-dark">Login</Link>
+            </div>)
           }
 
           <Router>
@@ -138,10 +154,13 @@ class App extends Component {
             <Suggetions path="/" suggestions={this.state.suggestions} />
             <Login path="/login" login={(username, password) => this.login(username, password)} />
             <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
+            <CreateUser path="sign-up"
+              submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)}
+            />
           </Router>
 
         </div>
-      </React.Fragment>
+      </React.Fragment >
     );
   }
 }

@@ -1,45 +1,44 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');  // Used for hashing passwords!
+const bcrypt = require('bcryptjs');
 
-// I recommend that you store your users in MongoDB using Mongoose instead of this.
-const users = [
-    // These are just some test users with passwords.
-    // The passwords are in clear text for testing purposes (don't do this in production).
-    { id: 0, username: "alem", password: '123', name: "Alex Marquardt", admin: true },
-    { id: 1, username: "teacher", password: '0000', name: "Kristian Teacher", admin: false }
-];
+module.exports = (secret, mongoose) => {
+    /**** Database ****/
+    const db = require('../databases/user_db')(mongoose);
 
-// Creating more test data: We run through all users and add a hash of their password to each.
-// In practice, you should hash when passwords are created, not later.
-users.forEach(async user => {
-    const hashedPassword = await new Promise((resolve, reject) => {
-        bcrypt.hash(user.password, 10, function (err, hash) {
-            if (err) reject(err); else resolve(hash);
+    /**** Routes ****/
+    // get all users
+    router.get('/', async (req, res) => {
+        const users = await db.getUsers();
+        res.json(users)
+    })
+
+    // create new user
+    router.post('/', async (req, res) => {
+        const hashedPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(req.body.password, 10, function (err, hash) {
+                if (err) reject(err); else resolve(hash);
+            });
         });
-    });
 
-    user.hash = hashedPassword; // The hash has been made, and is stored on the user object.
-    delete user.password; // Let's remove the clear text password (it shouldn't be there in the first place)
-    console.log(`Hash generated for ${user.username}:`, user); // Logging for debugging purposes
-});
+        let newUser = {
+            username: req.body.username,
+            password: hashedPassword,
+            name: req.body.name,
+            admin: req.body.admin
+        };
 
-// Create the routes and export the router
-module.exports = secret => {
-
-    router.post('/', (req, res) => {
-        // TODO: Implement user account creation
-        res.status(501).json({ msg: "create new user not implemented" });
+        const user = await db.createUser(newUser);
+        res.json({ msg: "User saved", user });
     });
 
     router.put('/', (req, res) => {
-        // TODO: Implement user update (change password, etc).
         res.status(501).json({ msg: "update user not implemented" });
     });
 
-    // This route takes a username and a password and create an auth token
-    router.post('/authenticate', (req, res) => {
+    // token generator
+    router.post('/authenticate', async (req, res) => {
         const username = req.body.username;
         const password = req.body.password;
 
@@ -49,26 +48,28 @@ module.exports = secret => {
             res.status(401).json({ msg: msg });
             return;
         }
+        const user = await db.getUser(username);
+        console.log(user);
 
-        const user = users.find((user) => user.username === username);
-        if (user) { // If the user is found
-            bcrypt.compare(password, user.hash, (err, result) => {
-                if (result) { // If the password matched
+
+        if (user) { // If user is found
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (result) { // If password matched
                     const payload = { username: username };
                     const token = jwt.sign(payload, secret, { expiresIn: '1h' });
 
                     res.json({
-                        // msg: `User '${username}' authenticated successfully`,
                         token: token,
                         username: user.username,
                         name: user.name,
                         admin: user.admin
                     });
                 }
-                else res.status(401).json({ msg: "Password mismatch!" })
+                else res.status(401).json({ msg: "Password or user mismatch!" })
             });
-        } else {
-            res.status(404).json({ msg: "User not found!" });
+        }
+        else {
+            res.status(404).json({ msg: "Password or user mismatch!" });
         }
     });
 
