@@ -74,7 +74,7 @@ class CreateUser extends Component {
                 type="checkbox"
                 onClick={() => this.onCheckboxCreateUserHandler()}
               />
-              <label className="form-check-label">Admin user?</label>
+              <label className="form-check-label">Admin user</label>
             </div>
           </div>
 

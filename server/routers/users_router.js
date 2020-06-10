@@ -43,14 +43,11 @@ module.exports = (secret, mongoose) => {
         const password = req.body.password;
 
         if (!username || !password) {
-            let msg = "Username or password missing!";
-            console.error(msg);
+            let msg = "Username or password missing";
             res.status(401).json({ msg: msg });
             return;
         }
         const user = await db.getUser(username);
-        console.log(user);
-
 
         if (user) { // If user is found
             bcrypt.compare(password, user.password, (err, result) => {
@@ -65,11 +62,11 @@ module.exports = (secret, mongoose) => {
                         admin: user.admin
                     });
                 }
-                else res.status(401).json({ msg: "Password or user mismatch!" })
+                else res.status(401).json({ msg: "Password or user mismatch" })
             });
         }
         else {
-            res.status(404).json({ msg: "Password or user mismatch!" });
+            res.status(404).json({ msg: "Password or user mismatch" });
         }
     });
 

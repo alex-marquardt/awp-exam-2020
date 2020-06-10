@@ -73,8 +73,8 @@ class Auth {
 
   fetch(url, options) {
     const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
     };
 
     if (this.loggedIn()) {
@@ -86,3 +86,17 @@ class Auth {
 }
 
 export default Auth;
+
+
+// fetch(url, options) {
+//   const headers = {
+//     'Accept': 'application/json',
+//     'Content-Type': 'application/json',
+//   };
+
+//   if (this.loggedIn()) {
+//     headers["Authorization"] = "Bearer " + this.getToken();
+//   }
+
+//   return fetch(url, { headers, ...options });
+// }

@@ -39,6 +39,15 @@ class SuggestionDb {
         }
     }
 
+    async deleteSuggestion(removeSuggestion) {
+        try {
+            return await this.suggestionModel.remove({ _id: removeSuggestion.id })
+        } catch (error) {
+            console.log("deleteSuggestion: ", error.message);
+            return;
+        }
+    }
+
     async createSignature(suggestionId, signature) {
         const suggestion = await this.getSuggestion(suggestionId);
 

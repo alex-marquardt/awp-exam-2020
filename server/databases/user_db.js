@@ -10,6 +10,15 @@ class UserDb {
         this.userModel = mongoose.model('user', userSchema);
     }
 
+    async getUsers() {
+        try {
+            return await this.userModel.find({});
+        } catch (error) {
+            console.log("getUsers: ", error.message)
+            return;
+        }
+    }
+
     async getUser(username) {
         try {
             return await this.userModel.findOne({ username: username });

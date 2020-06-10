@@ -31,6 +31,15 @@ module.exports = (mongoose) => {
         res.json({ msg: "Suggestion saved", suggestion: suggestion });
     });
 
+    router.delete('/', async (req, res) => {
+        const removeSuggestion = {
+            id: req.body.id
+        };
+
+        const suggestion = await db.deleteSuggestion(removeSuggestion);
+        res.json({ msg: "Suggestion deleted", suggestion: suggestion });
+    });
+
     // Post signature
     router.post('/:suggestionId/signatures', async (req, res) => {
         const suggestionId = req.params.suggestionId;

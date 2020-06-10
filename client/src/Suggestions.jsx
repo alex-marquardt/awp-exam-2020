@@ -26,6 +26,7 @@ class Suggetions extends Component {
             </Link>
           ))}
         </ul>
+        <br />
       </React.Fragment>
     );
   }
