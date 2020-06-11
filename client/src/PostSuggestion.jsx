@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 
 class PostSuggestion extends Component {
   constructor(props) {
@@ -12,6 +12,7 @@ class PostSuggestion extends Component {
 
   onSubmitSuggestionHandler = () => {
     this.props.submitSuggestion(this.state.title, this.state.description);
+    navigate("/");
   };
 
   onInputSuggestionHandler = (event) => {

@@ -15,6 +15,8 @@ class Auth {
     if ([401, 404].includes(parseInt(response.status))) {
       throw Error(json.msg);
     }
+    console.log(json);
+    
     this.setToken(json.token);
     this.setUsername(json.username);
     this.setName(json.name);
@@ -47,7 +49,7 @@ class Auth {
     localStorage.removeItem("admin");
   }
 
-  setToken(token) {
+  setToken(token) {   
     localStorage.setItem("token", token);
   }
 
@@ -80,23 +82,9 @@ class Auth {
     if (this.loggedIn()) {
       headers["Authorization"] = "Bearer " + this.getToken();
     }
-
+    
     return fetch(url, { headers, ...options });
   }
 }
 
 export default Auth;
-
-
-// fetch(url, options) {
-//   const headers = {
-//     'Accept': 'application/json',
-//     'Content-Type': 'application/json',
-//   };
-
-//   if (this.loggedIn()) {
-//     headers["Authorization"] = "Bearer " + this.getToken();
-//   }
-
-//   return fetch(url, { headers, ...options });
-// }

@@ -7,13 +7,14 @@ const path = require('path');
 const checkJwt = require('express-jwt');
 
 /**** Configuration ****/
-const port = process.env.PORT || 8080;
 const app = express();
+const port = process.env.PORT || 8080;
+const url = process.env.MONGO_URL || 'mongodb://localhost/suggestion_db';
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan('combined'));
-app.use(express.static('../client/build'));
+app.use(express.static(path.resolve('..', 'client', 'build')));
 
 /**** Open paths ****/
 let openPaths = [
@@ -25,6 +26,7 @@ let openPaths = [
 ];
 
 const secret = process.env.SECRET || "awp exam 2020";
+if (!process.env.SECRET) console.error("Warning: SECRET is undefined.");
 app.use(checkJwt({ secret: secret }).unless({ path: openPaths }));
 
 app.use((err, req, res, next) => {
@@ -48,7 +50,6 @@ app.get('*', (req, res) =>
 );
 
 /**** Start ****/
-const url = process.env.MONGO_URL || 'mongodb://localhost/suggestion_db';
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(async () => {
         await app.listen(port);

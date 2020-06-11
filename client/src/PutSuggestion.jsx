@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 
 class PutSuggestion extends Component {
   constructor(props) {
@@ -23,20 +23,21 @@ class PutSuggestion extends Component {
     }
   }
 
-  onSubmitSuggestionHandler = () => {
+  onSubmitSuggestionHandler() {
     this.props.submitSuggestion(
       this.state.id,
       this.state.title,
       this.state.description,
       this.state.hide
     );
-  };
+    navigate("/");
+  }
 
   onInputSuggestionHandler = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  onCheckboxHideSuggestionHandler = (event) => {
+  onCheckboxHideSuggestionHandler = () => {
     this.setState({ hide: !this.state.hide });
   };
 
@@ -75,9 +76,7 @@ class PutSuggestion extends Component {
                   className="form-check-input"
                   type="checkbox"
                   checked={this.state.hide}
-                  onChange={(event) =>
-                    this.onCheckboxHideSuggestionHandler(event)
-                  }
+                  onChange={this.onCheckboxHideSuggestionHandler}
                 />
                 <label className="form-check-label">Hide suggestion</label>
               </div>
@@ -85,7 +84,7 @@ class PutSuggestion extends Component {
 
             <button
               className="btn btn-dark"
-              onClick={(suggestion) => this.onSubmitSuggestionHandler()}
+              onClick={this.onSubmitSuggestionHandler}
             >
               Save suggestion
             </button>

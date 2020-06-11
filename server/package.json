@@ -1,5 +1,5 @@
 {
-  "name": "express_api_suggestion",
+  "name": "awp-exam-2020-suggestion-server",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {

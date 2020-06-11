@@ -33,10 +33,6 @@ module.exports = (secret, mongoose) => {
         res.json({ msg: "User saved", user });
     });
 
-    router.put('/', (req, res) => {
-        res.status(501).json({ msg: "update user not implemented" });
-    });
-
     // token generator
     router.post('/authenticate', async (req, res) => {
         const username = req.body.username;
