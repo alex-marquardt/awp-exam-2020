@@ -8,6 +8,8 @@ import PostSuggestion from './PostSuggestion';
 import Auth from './Auth';
 import CreateUser from './CreateUser';
 import AdminPage from './AdminPage';
+import UserPage from './UserPage';
+import PutSuggestion from './PutSuggestion';
 
 class App extends Component {
   api_url = process.env.REACT_APP_API_URL;
@@ -19,7 +21,7 @@ class App extends Component {
       suggestions: [],
       loggedIn: this.Auth.loggedIn(),
       alert: { message: "", show: false },
-      users: {}
+      users: []
     }
   }
 
@@ -28,7 +30,8 @@ class App extends Component {
     this.getUsers();
   }
 
-  getSuggestion = (suggestionId) => this.state.suggestions.find(s => s._id === suggestionId);
+  getSuggestion = (suggestionId) => this.state.suggestions.find(suggestion => suggestion._id === suggestionId);
+  getUser = (userId) => this.state.users.find(user => user._id === userId)
 
   renderAlert(title, body) {
     const newAlert = {
@@ -123,6 +126,16 @@ class App extends Component {
     this.getSuggestions();
   }
 
+  async onEditSuggestionHandler(suggestionId, title, description) {
+    const newSuggestion = {
+      id: suggestionId,
+      title: title,
+      description: description
+    }
+
+    console.log("RAMT", newSuggestion);
+  }
+
   async onDeleteSuggestionHandler(id) {
     const deleteSuggestion = {
       id: id
@@ -171,7 +184,7 @@ class App extends Component {
               <button className="btn btn-dark float-right" type="button" style={{ marginLeft: "5px" }} onClick={(_) => this.logout()}>Log out: {localStorage.username}</button>
               {localStorage.admin === "true" ?
                 <div className="btn-group float-right" role="group">
-                  <Link to={`/admin-dashboard`} type="button" className="btn btn-dark float-right">Admin page</Link>
+                  <Link to={`/admin-page`} type="button" className="btn btn-dark float-right">Admin page</Link>
                 </div>
                 :
                 <React.Fragment></React.Fragment>}
@@ -184,16 +197,26 @@ class App extends Component {
           }
 
           <Router>
-            <Suggetions path="/" suggestions={this.state.suggestions} />
+            <Suggetions path="/"
+              suggestions={this.state.suggestions} />
             <Suggestion path="/suggestions/:suggestionId"
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
               submitSignature={(suggestionId, signature) => this.onSubmitSignatureHandler(suggestionId, signature)} />
-            <Login path="/login" login={(username, password) => this.login(username, password)} />
-            <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
+            <Login path="/login"
+              login={(username, password) => this.login(username, password)} />
             <CreateUser path="/sign-up"
-              submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)}
-            />
-            <AdminPage path="/admin-dashboard" suggestions={this.state.suggestions} users={this.state.users} deleteSuggestion={(suggestionId) => this.onDeleteSuggestionHandler(suggestionId)} />
+              submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)} />
+            <PutSuggestion path="/suggestions/:suggestionId/edit"
+              getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
+              submitSuggestion={(suggestionId, title, description) => this.onEditSuggestionHandler(suggestionId, title, description)} />
+            <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
+            <AdminPage path="/admin-page"
+              suggestions={this.state.suggestions}
+              users={this.state.users}
+              deleteSuggestion={(suggestionId) => this.onDeleteSuggestionHandler(suggestionId)} />
+            <UserPage path="/users/:userId"
+              suggestions={this.state.suggestions}
+              getUser={(userId) => this.getUser(userId)} />
           </Router>
 
           {this.state.alert.show ? this.state.alert.message : <></>}
