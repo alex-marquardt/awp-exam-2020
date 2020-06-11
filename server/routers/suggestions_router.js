@@ -23,6 +23,7 @@ module.exports = (mongoose) => {
         const newSuggestion = {
             title: req.body.title,
             description: req.body.description,
+            hide: false,
             date: new Date().toLocaleString(),
             signatures: []
         };
@@ -37,6 +38,7 @@ module.exports = (mongoose) => {
             id: req.body.id,
             title: req.body.title,
             description: req.body.description,
+            hide: req.body.hide,
         };
 
         const suggestion = await db.updateSuggestion(newSuggestion);

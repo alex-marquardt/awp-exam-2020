@@ -38,12 +38,6 @@ class AdminPage extends Component {
                       >
                         Delete
                       </button>
-                      <button
-                        className="btn btn-dark float-right"
-                        style={{ marginLeft: "5px" }}
-                      >
-                        Hide
-                      </button>
                       <Link
                         to={`/suggestions/${suggestion._id}/edit`}
                         className="btn btn-dark float-right"

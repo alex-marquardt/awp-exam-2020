@@ -3,6 +3,7 @@ class SuggestionDb {
         const suggestionSchema = new mongoose.Schema({
             title: String,
             description: String,
+            hide: Boolean,
             date: String,
             signatures: [{ name: String, username: String, date: String }]
         });

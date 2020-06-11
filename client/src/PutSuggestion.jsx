@@ -8,7 +8,7 @@ class PutSuggestion extends Component {
       id: "",
       title: "",
       description: "",
-      signatures: "",
+      hide: true,
     };
   }
 
@@ -19,7 +19,7 @@ class PutSuggestion extends Component {
       this.setState({ id: suggestion._id });
       this.setState({ title: suggestion.title });
       this.setState({ description: suggestion.description });
-      this.setState({ signatures: suggestion.signatures });
+      this.setState({ hide: suggestion.hide });
     }
   }
 
@@ -27,12 +27,17 @@ class PutSuggestion extends Component {
     this.props.submitSuggestion(
       this.state.id,
       this.state.title,
-      this.state.description
+      this.state.description,
+      this.state.hide
     );
   };
 
   onInputSuggestionHandler = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  onCheckboxHideSuggestionHandler = (event) => {
+    this.setState({ hide: !this.state.hide });
   };
 
   render() {
@@ -49,7 +54,6 @@ class PutSuggestion extends Component {
               <input
                 type="text"
                 className="form-control"
-                placeholder="New suggestion title..."
                 name="title"
                 value={this.state.title}
                 onChange={(event) => this.onInputSuggestionHandler(event)}
@@ -60,12 +64,25 @@ class PutSuggestion extends Component {
               <input
                 type="text"
                 className="form-control"
-                placeholder="New suggestion description..."
                 name="description"
                 value={this.state.description}
                 onChange={(event) => this.onInputSuggestionHandler(event)}
               />
             </div>
+            <div className="form-group">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={this.state.hide}
+                  onChange={(event) =>
+                    this.onCheckboxHideSuggestionHandler(event)
+                  }
+                />
+                <label className="form-check-label">Hide suggestion</label>
+              </div>
+            </div>
+
             <button
               className="btn btn-dark"
               onClick={(suggestion) => this.onSubmitSuggestionHandler()}

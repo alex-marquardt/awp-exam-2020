@@ -3,6 +3,23 @@ import { Link } from "@reach/router";
 
 class Suggetions extends Component {
   render() {
+    const suggestions = this.props.suggestions;
+    const filteredSuggestions = [];
+
+    // filter all 'hide' suggestions (can't use filter on object :-(
+    if (suggestions) {
+      for (let i = 0; i < suggestions.length; i++) {
+        // check if user is admin
+        if (localStorage.admin === "true") {
+          filteredSuggestions.push(suggestions[i]);
+        } else {
+          if (suggestions[i].hide === false) {
+            filteredSuggestions.push(suggestions[i]);
+          }
+        }
+      }
+    }
+
     return (
       <React.Fragment>
         <Link to={`/create-suggestion`} className="btn btn-dark" type="button">
@@ -11,7 +28,7 @@ class Suggetions extends Component {
 
         <h2>Suggetions</h2>
         <ul className="list-group">
-          {this.props.suggestions.map((suggestion) => (
+          {filteredSuggestions.map((suggestion) => (
             <Link to={`/suggestions/${suggestion._id}`} key={suggestion._id}>
               <li className="list-group-item">
                 <i className="text-muted blockquote-footer float-right">

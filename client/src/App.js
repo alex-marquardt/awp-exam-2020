@@ -86,13 +86,14 @@ class App extends Component {
     });
   }
 
-  async onPutSuggestionHandler(newSuggestion) {
+  async putSuggestionHandler(newSuggestion) {
     await this.Auth.fetch(`${this.api_url}/suggestions`, {
       method: 'PUT',
       body: JSON.stringify({
         id: newSuggestion.id,
         title: newSuggestion.title,
         description: newSuggestion.description,
+        hide: newSuggestion.hide
       })
     });
   }
@@ -137,14 +138,15 @@ class App extends Component {
     this.getSuggestions();
   }
 
-  async onEditSuggestionHandler(suggestionId, title, description) {
+  async onEditSuggestionHandler(suggestionId, title, description, hide) {
     const newSuggestion = {
       id: suggestionId,
       title: title,
       description: description,
+      hide: hide
     }
 
-    await this.onPutSuggestionHandler(newSuggestion);
+    await this.putSuggestionHandler(newSuggestion);
     this.getSuggestions();
   }
 
@@ -162,7 +164,7 @@ class App extends Component {
     if (localStorage.name !== signature) { // check if input name and logged in name match
       this.renderAlert("Signature error", "Signature doesn't match")
     }
-    else if (this.state.suggestions.find((suggestion) => suggestion._id === suggestionId).signatures.find((sig) => sig.username === signature)) { // check if username is already added to suggestion
+    else if (this.state.suggestions.find((suggestion) => suggestion._id === suggestionId).signatures.find((sig) => sig.name === signature)) { // check if username is already added to suggestion
       this.renderAlert("Signature error", "Your signature is already added")
     }
     else {
@@ -186,7 +188,7 @@ class App extends Component {
       <React.Fragment>
         <div className="app-header">
           <div className="container-fluid">
-            <h1>Suggetions Exam App</h1>
+            <Link to="/"><h1>Suggetions Exam App</h1></Link>
           </div>
         </div>
         <div className="container">
@@ -220,7 +222,7 @@ class App extends Component {
               submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)} />
             <PutSuggestion path="/suggestions/:suggestionId/edit"
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
-              submitSuggestion={(suggestionId, title, description) => this.onEditSuggestionHandler(suggestionId, title, description)} />
+              submitSuggestion={(suggestionId, title, description, hide) => this.onEditSuggestionHandler(suggestionId, title, description, hide)} />
             <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
             <AdminPage path="/admin-page"
               suggestions={this.state.suggestions}
