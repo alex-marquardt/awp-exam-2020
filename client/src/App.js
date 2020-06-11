@@ -82,6 +82,7 @@ class App extends Component {
       body: JSON.stringify({
         title: newSuggestion.title,
         description: newSuggestion.description,
+        name: localStorage.name
       })
     });
   }
@@ -118,9 +119,9 @@ class App extends Component {
     });
   }
 
-  async createUserHandler(username, password, name, admin) {
+  async createUserHandler(username, password, name) {
     try {
-      await this.Auth.createUser(username, password, name, admin);
+      await this.Auth.createUser(username, password, name);
       this.getUsers();
 
       this.renderAlert("Sign up success", `${username} is created`)
@@ -222,7 +223,7 @@ class App extends Component {
               login={(username, password) => this.login(username, password)} />
 
             <CreateUser path="/sign-up"
-              submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)} />
+              submitNewUser={(username, password, name) => this.createUserHandler(username, password, name)} />
 
             <PutSuggestion path="/suggestions/:suggestionId/edit"
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}

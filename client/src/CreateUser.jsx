@@ -8,7 +8,6 @@ class CreateUser extends Component {
       username: "",
       password: "",
       name: "",
-      admin: false,
     };
   }
 
@@ -16,15 +15,11 @@ class CreateUser extends Component {
     this.props.submitNewUser(
       this.state.username,
       this.state.password,
-      this.state.name,
-      this.state.admin
+      this.state.name
     );
 
   onInputCreateUserHandler = (event) =>
     this.setState({ [event.target.name]: event.target.value });
-
-  onCheckboxCreateUserHandler = () =>
-    this.setState({ admin: !this.state.admin });
 
   render() {
     return (
@@ -66,16 +61,6 @@ class CreateUser extends Component {
               placeholder="Enter name"
               onChange={(event) => this.onInputCreateUserHandler(event)}
             />
-          </div>
-          <div className="form-group">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                onClick={() => this.onCheckboxCreateUserHandler()}
-              />
-              <label className="form-check-label">Admin user</label>
-            </div>
           </div>
 
           <button

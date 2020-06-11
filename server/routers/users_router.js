@@ -26,7 +26,7 @@ module.exports = (secret, mongoose) => {
             username: req.body.username,
             password: hashedPassword,
             name: req.body.name,
-            admin: req.body.admin
+            admin: false
         };
 
         const user = await db.createUser(newUser);

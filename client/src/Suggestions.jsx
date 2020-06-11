@@ -33,6 +33,8 @@ class Suggetions extends Component {
               <li className="list-group-item">
                 <i className="text-muted blockquote-footer float-right">
                   {suggestion.date}
+                  <br />
+                  <p className="float-right">Made by: {suggestion.name}</p>
                 </i>
                 <b>{suggestion.title}</b>
                 <p>

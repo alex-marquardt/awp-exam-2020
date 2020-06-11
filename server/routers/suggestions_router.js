@@ -23,6 +23,7 @@ module.exports = (mongoose) => {
         const newSuggestion = {
             title: req.body.title,
             description: req.body.description,
+            name: req.body.name,
             hide: false,
             date: new Date().toLocaleString(),
             signatures: []
