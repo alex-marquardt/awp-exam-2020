@@ -8,7 +8,7 @@ class PutSuggestion extends Component {
       id: "",
       title: "",
       description: "",
-      hide: true,
+      hide: false,
     };
   }
 
@@ -76,7 +76,7 @@ class PutSuggestion extends Component {
                   className="form-check-input"
                   type="checkbox"
                   checked={this.state.hide}
-                  onChange={this.onCheckboxHideSuggestionHandler}
+                  onChange={() => this.onCheckboxHideSuggestionHandler()}
                 />
                 <label className="form-check-label">Hide suggestion</label>
               </div>
@@ -84,7 +84,7 @@ class PutSuggestion extends Component {
 
             <button
               className="btn btn-dark"
-              onClick={this.onSubmitSuggestionHandler}
+              onClick={(_) => this.onSubmitSuggestionHandler()}
             >
               Save suggestion
             </button>

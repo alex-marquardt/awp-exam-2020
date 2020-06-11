@@ -12,11 +12,9 @@ class Auth {
       }),
     });
     let json = await response.json();
-    if ([401, 404].includes(parseInt(response.status))) {
+    if ([401, 404].includes(parseInt(response.status))) {      
       throw Error(json.msg);
-    }
-    console.log(json);
-    
+    }   
     this.setToken(json.token);
     this.setUsername(json.username);
     this.setName(json.name);

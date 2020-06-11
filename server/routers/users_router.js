@@ -49,7 +49,7 @@ module.exports = (secret, mongoose) => {
             bcrypt.compare(password, user.password, (err, result) => {
                 if (result) { // If password matched
                     const payload = { username: username };
-                    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+                    const token = jwt.sign(payload, secret);
 
                     res.json({
                         token: token,

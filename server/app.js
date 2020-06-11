@@ -26,7 +26,6 @@ let openPaths = [
 ];
 
 const secret = process.env.SECRET || "awp exam 2020";
-if (!process.env.SECRET) console.error("Warning: SECRET is undefined.");
 app.use(checkJwt({ secret: secret }).unless({ path: openPaths }));
 
 app.use((err, req, res, next) => {
