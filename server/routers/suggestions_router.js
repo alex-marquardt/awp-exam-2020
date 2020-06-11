@@ -31,6 +31,19 @@ module.exports = (mongoose) => {
         res.json({ msg: "Suggestion saved", suggestion: suggestion });
     });
 
+    // Put suggestion
+    router.put('/', async (req, res) => {
+        const newSuggestion = {
+            id: req.body.id,
+            title: req.body.title,
+            description: req.body.description,
+        };
+
+        const suggestion = await db.updateSuggestion(newSuggestion);
+        res.json({ msg: "Suggestion saved", suggestion: suggestion });
+    });
+
+    // Delete suggestion
     router.delete('/', async (req, res) => {
         const removeSuggestion = {
             id: req.body.id

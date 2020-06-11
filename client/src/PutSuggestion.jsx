@@ -8,6 +8,7 @@ class PutSuggestion extends Component {
       id: "",
       title: "",
       description: "",
+      signatures: "",
     };
   }
 
@@ -18,6 +19,7 @@ class PutSuggestion extends Component {
       this.setState({ id: suggestion._id });
       this.setState({ title: suggestion.title });
       this.setState({ description: suggestion.description });
+      this.setState({ signatures: suggestion.signatures });
     }
   }
 
@@ -49,7 +51,7 @@ class PutSuggestion extends Component {
                 className="form-control"
                 placeholder="New suggestion title..."
                 name="title"
-                value={suggestion.title}
+                value={this.state.title}
                 onChange={(event) => this.onInputSuggestionHandler(event)}
               />
             </div>
@@ -60,7 +62,7 @@ class PutSuggestion extends Component {
                 className="form-control"
                 placeholder="New suggestion description..."
                 name="description"
-                value={suggestion.description}
+                value={this.state.description}
                 onChange={(event) => this.onInputSuggestionHandler(event)}
               />
             </div>

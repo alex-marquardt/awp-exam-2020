@@ -86,6 +86,17 @@ class App extends Component {
     });
   }
 
+  async onPutSuggestionHandler(newSuggestion) {
+    await this.Auth.fetch(`${this.api_url}/suggestions`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        id: newSuggestion.id,
+        title: newSuggestion.title,
+        description: newSuggestion.description,
+      })
+    });
+  }
+
   async deleteSuggestion(deleteSuggestion) {
     await this.Auth.fetch(`${this.api_url}/suggestions`, {
       method: 'DELETE',
@@ -130,10 +141,11 @@ class App extends Component {
     const newSuggestion = {
       id: suggestionId,
       title: title,
-      description: description
+      description: description,
     }
 
-    console.log("RAMT", newSuggestion);
+    await this.onPutSuggestionHandler(newSuggestion);
+    this.getSuggestions();
   }
 
   async onDeleteSuggestionHandler(id) {

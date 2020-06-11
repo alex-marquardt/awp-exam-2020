@@ -39,6 +39,17 @@ class SuggestionDb {
         }
     }
 
+    async updateSuggestion(newSuggestion) {
+        let suggestion = await this.getSuggestion(newSuggestion.id);
+
+        try {
+            return await suggestion.updateOne(newSuggestion);
+        } catch (error) {
+            console.log("updateSuggestion: ", error.message);
+            return;
+        }
+    }
+
     async deleteSuggestion(removeSuggestion) {
         try {
             return await this.suggestionModel.remove({ _id: removeSuggestion.id })
