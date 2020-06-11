@@ -36,7 +36,7 @@ class App extends Component {
   renderAlert(title, body) {
     const newAlert = {
       message:
-        <div className="alert alert-warning"><strong>{title}: </strong>{body}.<p className="float-right" style={{ cursor: "pointer" }} onClick={() => this.resetAlert()}>&times;</p></div>,
+        <div className="alert alert-info"><strong>{title}: </strong>{body}.<p className="float-right" style={{ cursor: "pointer" }} onClick={() => this.resetAlert()}>&times;</p></div>,
       show: true
     }
     this.setState({ alert: newAlert });
@@ -205,29 +205,37 @@ class App extends Component {
             </React.Fragment>
             :
             <React.Fragment>
-              <Link to={`/sign-up`} type="button" className="btn btn-dark float-right" style={{ marginLeft: "5px" }}>Sign up</Link>
-              <Link to={`/login`} type="button" className="btn btn-dark float-right">Login</Link>
+              <Link to={`/login`} type="button" className="btn btn-dark float-right" style={{ marginLeft: "5px" }}>Login</Link>
+              <Link to={`/sign-up`} type="button" className="btn btn-dark float-right">Sign up</Link>
             </React.Fragment>
           }
 
           <Router>
             <Suggetions path="/"
               suggestions={this.state.suggestions} />
+
             <Suggestion path="/suggestions/:suggestionId"
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
               submitSignature={(suggestionId, signature) => this.onSubmitSignatureHandler(suggestionId, signature)} />
+
             <Login path="/login"
               login={(username, password) => this.login(username, password)} />
+
             <CreateUser path="/sign-up"
               submitNewUser={(username, password, name, admin) => this.createUserHandler(username, password, name, admin)} />
+
             <PutSuggestion path="/suggestions/:suggestionId/edit"
               getSuggestion={(suggestionId) => this.getSuggestion(suggestionId)}
               submitSuggestion={(suggestionId, title, description, hide) => this.onEditSuggestionHandler(suggestionId, title, description, hide)} />
-            <PostSuggestion path="/create-suggestion" submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
+
+            <PostSuggestion path="/create-suggestion"
+              submitSuggestion={(title, description) => this.onSumbitSuggestionHandler(title, description)} />
+
             <AdminPage path="/admin-page"
               suggestions={this.state.suggestions}
               users={this.state.users}
               deleteSuggestion={(suggestionId) => this.onDeleteSuggestionHandler(suggestionId)} />
+
             <UserPage path="/users/:userId"
               suggestions={this.state.suggestions}
               getUser={(userId) => this.getUser(userId)} />

@@ -52,10 +52,7 @@ class UserPage extends Component {
               <ul>
                 {this.findSuggestions(suggestions, user.username).map(
                   (suggestion) => (
-                    <li key={suggestion._id}>
-                      Title:
-                      {suggestion.title}
-                    </li>
+                    <li key={suggestion._id}>{suggestion.title}</li>
                   )
                 )}
               </ul>
